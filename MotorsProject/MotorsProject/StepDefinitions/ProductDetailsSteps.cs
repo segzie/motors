@@ -1,11 +1,11 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
 using TechTalk.SpecFlow;
+using System.Linq;
 
 namespace MotorsProject.StepDefinitions
 {
@@ -16,6 +16,10 @@ namespace MotorsProject.StepDefinitions
         IWebElement agreeButton;
         IWebElement postcodeField;
         IWebElement carMake;
+        IWebElement carModel;
+        IWebElement searchButton;
+        IWebElement price;
+        IList<IWebElement> result;
 
         [Given(@"I navigate to Motors homepage")]
         public void GivenINavigateToMotorsHomepage()
@@ -32,7 +36,7 @@ namespace MotorsProject.StepDefinitions
         public void WhenIEnterPostcode()
         {
             postcodeField = driver.FindElement(By.Name("PostCode"));
-            postcodeField.SendKeys("M8 8YG");
+            postcodeField.SendKeys("M3 1EY");
         }
 
         [When(@"I select my car make")]
@@ -46,25 +50,33 @@ namespace MotorsProject.StepDefinitions
         [When(@"I select my car model")]
         public void WhenISelectMyCarModel()
         {
+            carModel = driver.FindElement(By.Id("Model"));
+            SelectElement select = new SelectElement(carModel);
+            select.SelectByText("Q7");
             
         }
 
         [When(@"i click on search button")]
         public void WhenIClickOnSearchButton()
-        {
-            
+        {            
+            searchButton = driver.FindElement(By.ClassName("sp__btn-title"));
+            searchButton.Click();
         }
 
         [When(@"I click on the first car from thwe result")]
         public void WhenIClickOnTheFirstCarFromThweResult()
         {
-            
+            result = driver.FindElements(By.CssSelector("image__photo"));
+            result.ElementAt(0).Click();
+
         }
 
         [Then(@"the price of the car selected is displayed")]
         public void ThenThePriceOfTheCarSelectedIsDisplayed()
         {
-            
+            price = driver.FindElement(By.ClassName("vdp-header__full-price"));
+            Assert.True(price.Displayed);
+
         }
 
     }
